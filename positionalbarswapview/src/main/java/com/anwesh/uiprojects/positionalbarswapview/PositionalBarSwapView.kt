@@ -203,4 +203,13 @@ class PositionalBarSwapView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    companion object {
+
+        fun create(activity : Activity) : PositionalBarSwapView {
+            val view : PositionalBarSwapView = PositionalBarSwapView(activity)
+            activity.setContentView(view)
+            return view
+        }
+    }
 }
