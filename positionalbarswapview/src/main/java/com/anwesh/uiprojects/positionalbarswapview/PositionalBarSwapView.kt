@@ -54,14 +54,16 @@ fun Canvas.drawPBSNode(i : Int, scale : Float, paint : Paint) {
 
 class PositionalBarSwapView(ctx : Context) : View(ctx) {
 
-    override fun onDraw(canvas : Canvas) {
+    private val renderer : Renderer = Renderer(this)
 
+    override fun onDraw(canvas : Canvas) {
+        renderer.render(canvas)
     }
 
     override fun onTouchEvent(event : MotionEvent) : Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap()
             }
         }
         return true
@@ -183,8 +185,9 @@ class PositionalBarSwapView(ctx : Context) : View(ctx) {
 
         private val animator : Animator = Animator(view)
         private val pbs : PositionalBarSwap = PositionalBarSwap(0)
+        private val paint : Paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
-        fun render(canvas : Canvas, paint : Paint) {
+        fun render(canvas : Canvas) {
             canvas.drawColor(backColor)
             pbs.draw(canvas, paint)
             animator.animate {
