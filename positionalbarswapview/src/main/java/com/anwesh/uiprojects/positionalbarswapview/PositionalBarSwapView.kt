@@ -178,4 +178,26 @@ class PositionalBarSwapView(ctx : Context) : View(ctx) {
             curr.startUpdating(cb)
         }
     }
+
+    data class Renderer(var view : PositionalBarSwapView) {
+
+        private val animator : Animator = Animator(view)
+        private val pbs : PositionalBarSwap = PositionalBarSwap(0)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(backColor)
+            pbs.draw(canvas, paint)
+            animator.animate {
+                pbs.update {
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            pbs.startUpdating {
+                animator.start()
+            }
+        }
+    }
 }
