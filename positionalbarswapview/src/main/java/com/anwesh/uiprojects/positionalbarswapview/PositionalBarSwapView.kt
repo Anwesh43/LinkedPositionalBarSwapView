@@ -24,32 +24,38 @@ fun Float.maxScale(i : Int, n : Int) : Float = Math.max(0f, this - i * n.inverse
 fun Float.divideScale(i : Int, n : Int) : Float = Math.min(n.inverse(), maxScale(i, n)) * n
 fun Float.sinify() : Float = Math.sin(this * Math.PI).toFloat()
 
-fun Canvas.drawPositionalBarSwap(scale : Float, w : Float, h : Float, paint : Paint) {
+fun Canvas.drawPositionalBarSwap(scale : Float, w : Float, h : Float, color : Int, paint : Paint) {
     val sf : Float = scale.sinify()
     val sf1 : Float = sf.divideScale(0, 2)
     val sf2 : Float = sf.divideScale(1, 2)
     val hGap : Float = h / (2 * bars + 1)
     val yStart : Float = hGap
     var y : Float = yStart
+    paint.textSize = hGap / 3
     for (j in 1..(bars - 1)) {
-        val sf2j : Float = sf2.divideScale(j, bars - 1)
+        val sf2j : Float = sf2.divideScale(j - 1, bars - 1)
         y += 2 * hGap * sf2j
         save()
         translate(0f, yStart + 2 * hGap * j - 2 * hGap * sf2j)
+        paint.color = color
         drawRect(RectF(0f, 0f, w * sf1, hGap), paint)
+        paint.color = Color.WHITE
+        drawText("${j + 1}", w * sf1 - w / 2, hGap / 2, paint)
         restore()
     }
     save()
     translate(0f, y)
+    paint.color = color
     drawRect(RectF(0f, 0f, w * sf1, hGap), paint)
+    paint.color = Color.WHITE
+    drawText("${1}", w * sf1 - w / 2, hGap / 2, paint)
     restore()
 }
 
 fun Canvas.drawPBSNode(i : Int, scale : Float, paint : Paint) {
     val w : Float = width.toFloat()
     val h : Float = height.toFloat()
-    paint.color = Color.parseColor(colors[i])
-    drawPositionalBarSwap(scale, w, h, paint)
+    drawPositionalBarSwap(scale, w, h, Color.parseColor(colors[i]), paint)
 }
 
 class PositionalBarSwapView(ctx : Context) : View(ctx) {
